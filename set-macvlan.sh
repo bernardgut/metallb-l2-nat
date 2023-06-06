@@ -7,19 +7,19 @@
 # Run this first then run kubectl expose deploy <your-deployment> --port=XXX --target-port=XXX
 #
 # this is a stub. Check it before running it.
-# NOTE: svc-ip should be in CIDR format and corresponds to the Metallb subnet. eg: 192.168.2.1/24
 
 
 HWLINK=$1
 NAME=$2
 MACVLN=k8s.$2
 IP=$3
+SUBNET=$4
 NETWORK=$(ip -4 route list exact default | head -n1 | cut -d' ' -f3)
 GATEWAY=$(ip -o route | grep default | grep "$HWLINK" | awk '{print $3}')
 
 #create interface
 ip link add link "$HWLINK" "$MACVLN" type macvlan mode bridge
-ip address add "$IP" dev "$MACVLN"
+ip address add "$IP/$SUBNET" dev "$MACVLN"
 ip link set dev "$MACVLN" up
 #routing table
 ip route add "$NETWORK" dev "$MACVLN" metric 0

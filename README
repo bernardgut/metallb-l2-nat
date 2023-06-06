@@ -1,4 +1,4 @@
 metallb-l2-nat
 ===========================================================================
 
-provide metallb support for NAT
+NAT support for Metallb
